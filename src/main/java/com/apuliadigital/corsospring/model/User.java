@@ -1,5 +1,6 @@
 package com.apuliadigital.corsospring.model;
 
+import com.apuliadigital.corsospring.dto.PostResponseDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,8 +30,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String email, int age) {
-        this.id = id;
+    public User(String name, String email, int age) {
         this.name = name;
         this.email = email;
         this.age = age;

@@ -1,5 +1,8 @@
 package com.apuliadigital.corsospring.service;
 
+import com.apuliadigital.corsospring.dto.PostResponseDTO;
+import com.apuliadigital.corsospring.dto.UserDTO;
+import com.apuliadigital.corsospring.dto.UserResponseDTO;
 import com.apuliadigital.corsospring.model.User;
 import com.apuliadigital.corsospring.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,15 +16,34 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers(){
+        return userRepository.findAll().stream().map(user -> {
+            List<PostResponseDTO> posts = user.getPosts().stream()
+                    .map(post -> new PostResponseDTO(
+                            post.getId(),
+                            post.getTitle(),
+                            post.getContent()))
+                        .toList();
+            return new UserResponseDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getAge(),
+                    posts
+            );
+        }).toList();
     }
 
     public User getUserById(int id){
         return userRepository.findById(id).orElse(null);
     }
 
-    public User createUser(User user){
+    public User createUser(UserDTO userDTO){
+        User user= new User(
+                userDTO.getName(),
+                userDTO.getEmail(),
+                userDTO.getAge()
+        );
         return userRepository.save(user);
     }
 
